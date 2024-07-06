@@ -1,0 +1,4 @@
+.idea/
+.venv/
+
+backend/database_secret.yml
