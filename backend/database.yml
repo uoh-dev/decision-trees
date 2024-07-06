@@ -1,6 +1,5 @@
-{
-    "database": "decision",
-    "hostname": "",
-    "username": "",
-    "password": ""
-}
+database: "decision"
+host: ""
+port: -1
+username: ""
+password: ""

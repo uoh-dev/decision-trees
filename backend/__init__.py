@@ -1,19 +1,16 @@
-import click
 from flask import Flask
-from yaml import safe_load
+from backend import db
+from backend.endpoints import tree
 
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_file("database_secret.yml", load=safe_load)
-    click.echo(app.config["database"])
 
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+    app.register_blueprint(tree.bp)
 
-    import db
-    #db.init_app(app)
+    from . import db
+    db.init_app(app)
 
+    # flask --app backend run
     # flask --app backend run --port xxxx
     return app
