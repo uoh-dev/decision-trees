@@ -1,8 +1,8 @@
 import Nav from './Nav'
 
-function Evaluate(props: { appState: ({ window }: { window: string }) => void }) {
+function Evaluate(props: { winState: (window: string) => void }) {
     return <>
-        <Nav appState={props.appState} selected="evaluate"></Nav>
+        <Nav winState={props.winState} selected="evaluate"></Nav>
         this is the eval window
     </>
 }
