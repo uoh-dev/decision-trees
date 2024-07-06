@@ -17,11 +17,21 @@
 <body>
     <h1>Decision Tree Builder API spec</h1>
     <h2 style="padding-bottom: 30px">Version 2</h2>
-    <div class="endpoint">
+    <div style="padding-bottom: 20px;">
+        <h2>Endpoints</h2>
+        <table>
+            <li><a href="#get-measurements">GET /measurements</a></li>
+            <li><a href="#get-athletes">GET /athletes</a></li>
+            <li><a href="#get-tree">GET /tree</a></li>
+            <li><a href="#post-tree">POST /tree</a></li>
+            <li><a href="#get-trees">GET /trees</a></li>
+        </table>
+    </div>
+    <div id="get-measurements" class="endpoint">
         <h3>GET /measurements</h3>
         <div class="obj">returns string[]</div>
     </div>
-    <div class="endpoint">
+    <div id="get-athletes" class="endpoint">
         <h3>GET /athletes</h3>
         <div class="obj">query {
     "limit": number?,
@@ -35,7 +45,7 @@
     }[]
 }[]     </div>
     </div>
-    <div class="endpoint">
+    <div id="get-tree" class="endpoint">
         <h3>GET /tree</h3>
         <div class="obj">query {
     "name": string
@@ -49,7 +59,7 @@
     }
 }       </div>
     </div>
-    <div class="endpoint">
+    <div id="post-tree" class="endpoint">
         <h3>POST /tree</h3>
         <div class="obj">body {
     "name": string,
@@ -61,7 +71,7 @@
     "log": string
 }       </div>
     </div>
-    <div class="endpoint">
+    <div id="get-trees" class="endpoint">
         <h3>GET /trees</h3>
         <div class="obj">query {
     "limit": number?,
