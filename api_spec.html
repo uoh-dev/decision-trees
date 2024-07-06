@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Tree Builder</title>
+    <style>
+        body {
+            font-family: monospace;
+        }
+        .obj {
+            white-space: pre-wrap;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Decision Tree Builder API spec</h1>
+    <h2 style="padding-bottom: 30px">Version 1</h2>
+    <div class="endpoint">
+        <h3>GET /measurements</h3>
+        <div class="obj">returns string[]</div>
+    </div>
+    <div class="endpoint">
+        <h3>GET /athletes</h3>
+        <div class="obj">query {
+    "limit": number?,
+    "page": number?
+}       </div>
+        <div class="obj">returns {
+    "name": string,
+    "measurements": {
+        "descriptor": string,
+        "value": number
+    }[]
+}[]</div>
+    </div>
+    <div class="endpoint">
+        <h3>POST /tree</h3>
+        <div class="obj">body {
+    "name": string,
+    "tree": {
+        "measurement": string,
+        "threshold": number
+    }[],
+    "log": string
+}</div>
+    <div>
+</body>
