@@ -16,7 +16,7 @@
 </head>
 <body>
     <h1>Decision Tree Builder API spec</h1>
-    <h2 style="padding-bottom: 30px">Version 2</h2>
+    <h2 style="padding-bottom: 30px">Version 3</h2>
     <div style="padding-bottom: 20px;">
         <h2>Endpoints</h2>
         <table>
@@ -35,22 +35,26 @@
         <h3>GET /athletes</h3>
         <div class="obj">query {
     "limit": number?,
-    "page": number?
+    "offset": number?
 }       </div>
         <div class="obj">returns {
-    "name": string,
-    "measurements": {
-        "descriptor": string,
-        "value": number
-    }[]
+    "data": {
+        "name": string,
+        "measurements": {
+            "descriptor": string,
+            "value": number
+        }[]
+    }[],
+    "next": string?
 }[]     </div>
     </div>
     <div id="get-tree" class="endpoint">
         <h3>GET /tree</h3>
         <div class="obj">query {
-    "name": string
+    "id": string
 }       </div>
         <div class="obj">returns {
+    "id": string,
     "name": string,
     "description": string,
     "tree": {
@@ -75,11 +79,14 @@
         <h3>GET /trees</h3>
         <div class="obj">query {
     "limit": number?,
-    "page": number?
+    "offset": number?
 }       </div>
         <div class="obj">returns {
-    "name": string,
-    "description": string
+    "data": {
+        "name": string,
+        "description": string
+    }[],
+    "next": string?
 }       </div>
     </div>
 </body>
