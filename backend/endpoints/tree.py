@@ -1,10 +1,13 @@
 from flask import Blueprint, request, abort
 from backend.db import get_db
+from backend.tools.validator import validator
+from backend.tools import schemas
 
 bp = Blueprint('tree', __name__, url_prefix="/tree")
 
 
 @bp.route('/', methods=['GET'])
+@validator(schemas.id_schema)
 def get_tree():
     db = get_db()
     if not (tree := db.retrieve_tree(request.args["id"])):
@@ -15,6 +18,7 @@ def get_tree():
 
 
 @bp.route('/', methods=['POST'])
+@validator(schemas.tree_schema)
 def post_tree():
     db = get_db()
     request_tree = request.get_json()
