@@ -16,7 +16,7 @@
 </head>
 <body>
     <h1>Decision Tree Builder API spec</h1>
-    <h2 style="padding-bottom: 30px">Version 3</h2>
+    <h2 style="padding-bottom: 30px">Version 4</h2>
     <div style="padding-bottom: 20px;">
         <h2>Endpoints</h2>
         <table>
@@ -83,8 +83,10 @@
 }       </div>
         <div class="obj">returns {
     "data": {
+        "id": string,
         "name": string,
-        "description": string
+        "description": string,
+        "amount_nodes": number
     }[],
     "next": string?
 }       </div>
