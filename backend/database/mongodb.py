@@ -60,15 +60,25 @@ class Database:
             }
         )
 
-    def retrieve_trees(self, limit: int):
-        # TODO: not functional yet
-        return list(
-            self.db['trees'].find(
-                projection={
-                    "tree": {"$size": "$tree"},
-                    "log": 0
+    def retrieve_trees(self, limit: int, offset: int):
+        pipeline = [
+            {
+                "$project": {
+                    "name": 1,
+                    "description": 1,
+                    "amount_nodes": {"$size": "$tree"},
                 }
-            ).limit(limit)
+            },
+            {
+                "$skip": offset
+            },
+            {
+                "$limit": limit
+            }
+        ]
+
+        return list(
+            self.db['trees'].aggregate(pipeline)
         )
 
     def insert_tree(self, tree: dict):

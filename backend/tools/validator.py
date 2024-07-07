@@ -10,12 +10,11 @@ def validator(schema):  # decorator factory to parameterize the decorator with s
             try:
                 if request.content_type == 'application/json':
                     validate(request.json, schema)
-                elif request.args:
-                    validate(request.args, schema)
                 else:
-                    return abort(400, "Invalid request format")
+                    validate(request.args, schema)
             except ValidationError as e:
-                return abort(400, e.message)
+                error_message = e.message if 'error_message' not in e.schema else e.schema['error_message']
+                return abort(400, error_message)
 
             return function()
         return wrapper
