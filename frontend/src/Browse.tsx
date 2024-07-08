@@ -4,7 +4,7 @@ function Browse(props: { trees: { name: string, description: string }[], winStat
     return <>
         <Nav winState={props.winState} selected="browse"></Nav>
         <div style={{ display: "flex", float: "left" }}>
-            {props.trees.map(({ name, description }) => <div className="panel">
+            {props.trees.map(({ name, description }) => <div key={name} className="panel">
                 <h2 style={{ display: "inline" }}>{name}</h2><br />
                 <span style={{ fontStyle: "italic" }}>{description}</span>
             </div>)}

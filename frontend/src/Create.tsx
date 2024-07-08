@@ -3,18 +3,19 @@ import Nav from './Nav'
 
 function drawCanvas() {
     const crCanvas = document.getElementById("creation-canvas") as HTMLCanvasElement;
-    const crWindow = document.getElementById("creation-window");
-    crCanvas.width = crWindow!.clientWidth;
-    crCanvas.height = crWindow!.clientHeight;
+    const crNodes = document.getElementById("creation-nodes");
+    crCanvas.height = crNodes!.clientHeight;
+    crCanvas.width = crNodes!.clientWidth;
     const ctx = crCanvas!.getContext("2d");
+    console.log(ctx);
     ctx!.strokeStyle = "gray";
-    const rows = crWindow!.children;
+    const rows = crNodes!.children;
     for (let i = 0; i < rows.length - 1; i++) {
+        
         const row = rows[i].children;
         const nextRow = rows[i + 1].children;
         for (let k = 0; k < row.length; k++) {
             const elem = row[k] as HTMLElement;
-            console.log(elem);
             const child0 = nextRow[2 * k] as HTMLElement;
             const child1 = nextRow[2 * k + 1] as HTMLElement;
             if (child0.style.visibility !== "hidden") {
@@ -33,19 +34,50 @@ function drawCanvas() {
     }
 }
 
+function enableDrag() {
+    let mouseDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let startY = 0;
+    let scrollTop = 0;
+    const slider = document.getElementById("creation-window");
+    slider!.addEventListener("mousemove", (e) => {
+        e.preventDefault();
+        if (!mouseDown) return;
+        slider!.scroll({
+            left: scrollLeft - e.pageX + slider!.offsetLeft + startX,
+            top: scrollTop - e.pageY + slider!.offsetTop + startY
+        });
+    });
+    slider!.addEventListener("mousedown", (e) => {
+        mouseDown = true;
+        startX = e.pageX - slider!.offsetLeft;
+        startY = e.pageY - slider!.offsetTop;
+        scrollLeft = slider!.scrollLeft;
+        scrollTop = slider!.scrollTop;
+    });
+    slider!.addEventListener("mouseup", () => {
+        mouseDown = false;
+    });
+    slider!.addEventListener("mouseleave", () => {
+        mouseDown = false;
+    });
+}
+
 function Create(props: { winState: (window: string) => void, tree: ({ measurement: string, threshold: number } | null)[] }) {
     useEffect(drawCanvas);
+    useEffect(enableDrag);
     const levels = [];
     for (let i = 1; i < props.tree.length; i *= 2) {
         levels.push(props.tree.slice(i - 1, i * 2 - 1))
     }
     return <>
         <Nav winState={props.winState} selected="create"></Nav>
-        <div style={{ width: "100%", height: "100%", display: "flex", justifyContent: "center" }}>
-            <canvas id="creation-canvas"></canvas>
-            <div id="creation-window">
-                {levels.map((lvl) => <div style={{ display: "flex", justifyContent: "center" }}>
-                    {lvl.map((node) => node === null ? <div className="node" style={{ visibility: "hidden" }} /> : <div className="node" title={"Threshold: " + node.threshold.toString()} style={{ textAlign: "center", lineHeight: "3" }}>{node.measurement}</div>)}
+        <div id="creation-window">
+            <canvas id="creation-canvas" />
+            <div id="creation-nodes">
+                {levels.map((lvl, k) => <div key={k} style={{ display: "flex", justifyContent: "center" }}>
+                    {lvl.map((node, l) => node === null ? <div key={l} className="node" style={{ visibility: "hidden" }} /> : <div key={l} className="node" title={"Threshold: " + node.threshold.toString()} style={{ textAlign: "center", lineHeight: "3" }}>{node.measurement}</div>)}
                 </div>)}
             </div>
         </div>
