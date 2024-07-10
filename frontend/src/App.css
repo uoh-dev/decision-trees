@@ -94,28 +94,28 @@
   flex-shrink: 0;
 }
 
-#creation-window {
-  width: 64em;
-  height: 48em;
+.tree-window {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   position: relative;
   user-select: none;
   cursor: grab;
 }
 
-#creation-window:active {
+.tree-window:active {
   cursor: grabbing;
 }
 
-#creation-nodes {
+.tree-nodes {
   display: flex;
   flex-direction: column;
   z-index: 2;
   position: absolute;
 }
 
-#creation-canvas {
-  /* Height has to be set via JS for some reason. */
+.tree-canvas {
+  /* Height/width has to be set via JS for some reason. */
   /* #creation-nodes' height/width is used to do this. */
   z-index: 1;
   position: absolute;
