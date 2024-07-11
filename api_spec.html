@@ -58,9 +58,12 @@
     "name": string,
     "description": string,
     "tree": {
+        "type": "tree"
         "measurement": string,
-        "threshold": number
-    }[]
+        "threshold": number,
+        "left": tree | { "type": "leaf", "diagnosis": string },
+        "right": tree | { "type": "leaf", "diagnosis": string }
+    }
 }       </div>
     </div>
     <div id="post-tree" class="endpoint">
@@ -69,9 +72,12 @@
     "name": string,
     "description": string,
     "tree": {
+        "type": "tree"
         "measurement": string,
-        "threshold": number
-    }[],
+        "threshold": number,
+        "left": tree | { "type": "leaf", "diagnosis": string },
+        "right": tree | { "type": "leaf", "diagnosis": string }
+    },
     "log": string
 }       </div>
     </div>
