@@ -54,13 +54,13 @@ const enableDrag = (id: string) => () => {
 }
 
 export type Leaf = { type: "leaf", diagnosis: string | null };
-export type TreeType = { type: "tree", measurement: string, threshold: number, left: TreeType, right: TreeType } | Leaf;
+export type NodeType = { type: "tree", measurement: string, threshold: number, left: TreeType, right: TreeType };
+export type TreeType = NodeType | Leaf;
 
-function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType }) {
+function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType, selected: TreeType | null, selector: (node: TreeType) => void }) {
     useEffect(drawCanvas(props.id));
     useEffect(enableDrag(props.id));
     const [tree, setTree] = useState(props.initialTree);
-    const [selected, selector] = useState<TreeType | null>(null);
     const levels = [];
     let queue: ({ node: TreeType, parent: number })[] = [{ node: tree, parent: 0 }];
     while (queue.length > 0) {
@@ -74,12 +74,12 @@ function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType 
         });
     }
     return <>
-        <div>Selected node: {selected !== null && selected.type === "tree" ? selected.measurement : "none"}</div>
+        <div>Selected node: {props.selected !== null && props.selected.type === "tree" ? props.selected.measurement : "none"}</div>
         <div id={props.id + "-window"} className="tree-window">
             <canvas id={props.id + "-canvas"} className="tree-canvas" />
             <div id={props.id + "-nodes"} className="tree-nodes">
                 {levels.map((lvl, k) => <div key={k} style={{ display: "flex", justifyContent: "center" }}>
-                    {lvl.map(({ node, parent }, l) => <Node isSelected={node === selected} selector={() => selector(node)} key={l} node={node} parent={parent} updateState={() => setTree(tree)}></Node>)}
+                    {lvl.map(({ node, parent }, l) => <Node isSelected={node === props.selected} selector={() => props.selector(node)} key={l} node={node} parent={parent} updateState={() => setTree(tree)}></Node>)}
                 </div>)}
             </div>
         </div>
