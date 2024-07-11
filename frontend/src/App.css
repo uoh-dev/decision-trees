@@ -85,13 +85,16 @@
 .node {
   height: 50px;
   width: 50px;
-  border-color: gray;
-  background-color: #333;
-  border-width: 2px;
+  border: 2px solid gray;
   border-radius: 200px;
-  border-style: solid;
+  background-color: #333;
   margin: 35px 20px 35px 20px;
   flex-shrink: 0;
+  cursor: pointer;
+}
+
+.node-selected {
+  border: 2px solid green;
 }
 
 .tree-window {

@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Node from "./Node";
 
 const drawCanvas = (id: string) => () => {
     const crCanvas = document.getElementById(id + "-canvas") as HTMLCanvasElement;
@@ -52,30 +53,37 @@ const enableDrag = (id: string) => () => {
     });
 }
 
-export type TreeType = { measurement: string, threshold: number, left: TreeType | null, right: TreeType | null };
+export type Leaf = { type: "leaf", diagnosis: string | null };
+export type TreeType = { type: "tree", measurement: string, threshold: number, left: TreeType, right: TreeType } | Leaf;
 
-function Tree(props: { id: string, mode: "edit" | "view", tree: TreeType }) {
+function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType }) {
     useEffect(drawCanvas(props.id));
     useEffect(enableDrag(props.id));
+    const [tree, setTree] = useState(props.initialTree);
+    const [selected, selector] = useState<TreeType | null>(null);
     const levels = [];
-    let queue: (TreeType & { parent: number })[] = [Object.assign(props.tree, { parent: 0 })];
+    let queue: ({ node: TreeType, parent: number })[] = [{ node: tree, parent: 0 }];
     while (queue.length > 0) {
         const last = Array.from(queue);
         levels.push(last);
         queue = [];
-        last.forEach((node, i) => {
-            if (node.left !== null) queue.push(Object.assign(node.left, { parent: i }));
-            if (node.right !== null) queue.push(Object.assign(node.right, { parent: i }));
+        last.forEach(({ node }, i) => {
+            if (node.type === "leaf") return;
+            if (node.left !== null) queue.push({ node: node.left, parent: i });
+            if (node.right !== null) queue.push({ node: node.right, parent: i });
         });
     }
-    return <div id={props.id + "-window"} className="tree-window">
-        <canvas id={props.id + "-canvas"} className="tree-canvas" />
-        <div id={props.id + "-nodes"} className="tree-nodes">
-            {levels.map((lvl, k) => <div key={k} style={{ display: "flex", justifyContent: "center" }}>
-                {lvl.map((node, l) => <div key={l} data-parent={node.parent} className="node" title={"Threshold: " + node.threshold.toString()} style={{ textAlign: "center", lineHeight: "3" }}>{node.measurement}</div>)}
-            </div>)}
+    return <>
+        <div>Selected node: {selected !== null && selected.type === "tree" ? selected.measurement : "none"}</div>
+        <div id={props.id + "-window"} className="tree-window">
+            <canvas id={props.id + "-canvas"} className="tree-canvas" />
+            <div id={props.id + "-nodes"} className="tree-nodes">
+                {levels.map((lvl, k) => <div key={k} style={{ display: "flex", justifyContent: "center" }}>
+                    {lvl.map(({ node, parent }, l) => <Node isSelected={node === selected} selector={() => selector(node)} key={l} node={node} parent={parent} updateState={() => setTree(tree)}></Node>)}
+                </div>)}
+            </div>
         </div>
-    </div>;
+    </>;
 }
 
 export default Tree
