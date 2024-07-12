@@ -16,8 +16,27 @@
 </head>
 <body>
     <h1>Decision Tree Builder API spec</h1>
-    <h2 style="padding-bottom: 30px">Version 5</h2>
+    <h2 style="padding-bottom: 30px">Version 6</h2>
     <div style="padding-bottom: 20px;">
+        <h2>Type Aliases</h2>
+        <div class="obj">
+&lt;tree&gt; := &lt;node&gt; | &lt;leaf&gt;
+&lt;node&gt; := {
+    "type": "tree",
+    "measurement": string,
+    "threshold": number,
+    "left": &lt;tree&gt;,
+    "right": &lt;tree&gt;
+}
+&lt;leaf&gt; := {
+    "type": "leaf",
+    "diagnosis": string?
+}
+&lt;marked_tree&gt; := &lt;node&gt; | &lt;marked_leaf&gt;
+&lt;marked_leaf&gt; := &lt;leaf&gt; & {
+    "marked": boolean
+}
+        </div>
         <h2>Endpoints</h2>
         <table>
             <li><a href="#get-measurements">GET /measurements</a></li>
@@ -25,6 +44,7 @@
             <li><a href="#get-tree">GET /tree</a></li>
             <li><a href="#post-tree">POST /tree</a></li>
             <li><a href="#get-trees">GET /trees</a></li>
+            <li><a href="#post-suggestion">POST /suggestion</a></li>
         </table>
     </div>
     <div id="get-measurements" class="endpoint">
@@ -57,13 +77,7 @@
     "id": string,
     "name": string,
     "description": string,
-    "tree": {
-        "type": "tree"
-        "measurement": string,
-        "threshold": number,
-        "left": tree | { "type": "leaf", "diagnosis": string },
-        "right": tree | { "type": "leaf", "diagnosis": string }
-    }
+    "tree": &lt;tree&gt;
 }       </div>
     </div>
     <div id="post-tree" class="endpoint">
@@ -71,13 +85,7 @@
         <div class="obj">body {
     "name": string,
     "description": string,
-    "tree": {
-        "type": "tree"
-        "measurement": string,
-        "threshold": number,
-        "left": tree | { "type": "leaf", "diagnosis": string },
-        "right": tree | { "type": "leaf", "diagnosis": string }
-    },
+    "tree": &lt;tree&gt;
     "log": string
 }       </div>
     </div>
@@ -97,4 +105,10 @@
     "next": string?
 }       </div>
     </div>
+    <div class="endpoint" id="post-suggestion">
+        <h3>POST /suggestion</h3>
+        <div class="obj">body &lt;marked_tree&gt;</div>
+        <div class="obj">returns &lt;tree&gt;</div>
+    </div>
+    The returned subtree is suggested to replace the marked leaf in the submitted marked tree. This method does not return whole trees.
 </body>
