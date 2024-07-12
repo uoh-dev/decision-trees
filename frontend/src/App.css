@@ -137,3 +137,31 @@
 .node-action-null {
   visibility: hidden;
 }
+
+button.node-action-elem {
+  color: white;
+  background-color: #333;
+  width: 200px;
+}
+
+button.node-action-elem:disabled {
+  color: gray;
+  background-color: #333;
+  width: 200px;
+  cursor: default;
+  border: 1px solid #333;
+}
+
+select.node-action-elem {
+  color: white;
+  background-color: #333;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+input.node-action-elem {
+  color: white;
+  background-color: #333;
+  border-radius: 6px;
+  padding: 6px;
+}
