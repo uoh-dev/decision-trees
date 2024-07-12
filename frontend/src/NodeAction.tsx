@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Leaf, NodeType, TreeType } from "./Tree";
 
 function setMeasurement(node: TreeType, updateState: () => void, measurement: string, threshold: number) {
@@ -17,7 +18,7 @@ function setMeasurement(node: TreeType, updateState: () => void, measurement: st
     updateState();
 }
 
-function setDiagnosis(node: TreeType, updateState: () => void, diagnosis: string) {
+function setDiagnosis(node: TreeType, updateState: () => void, diagnosis: string | null) {
     if (node.type !== "leaf") return;
     node.diagnosis = diagnosis;
     updateState();
@@ -36,7 +37,29 @@ function deleteNode(node: TreeType, updateState: () => void) {
     updateState();
 }
 
-function NodeAction(props: { node: TreeType | null }) {
-    if (props.node === null) return;
-    
+function NodeAction(props: { node: TreeType, updateState: () => void, measurements: string[] }) {
+    const [measurement, setMeasurementState] = useState(props.node.type === "tree" ? props.node.measurement : (props.measurements[0] ?? "abc"));
+    const [threshold, setThresholdState] = useState(props.node.type === "tree" ? props.node.threshold : 0.5);
+    const [diagnosis, setDiagnosisState] = useState(props.node.type === "leaf" ? props.node.diagnosis : null);
+    // TODO: default values for measurement/threshold/diagnosis should
+    // update when switching to another node, to actually show that
+    // node's current values.
+    return <div style={{ display: "flex" }}>
+        <div className="node-action">
+            <button className="node-action-elem" onClick={() => setMeasurement(props.node, props.updateState, measurement, threshold)}>Set Measurement</button>
+            <select onChange={(e) => setMeasurementState(e.target.value)} value={measurement} className="node-action-elem" name="inpMeasurement" id="inpMeasurement">
+                {props.measurements.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+            <input onChange={(e) => setThresholdState(parseInt(e.target.value))} className="node-action-elem" type="number" value={threshold} />
+        </div>
+        <div className="node-action">
+            <button className="node-action-elem" disabled={props.node.type === "tree" ? true : false} onClick={() => setDiagnosis(props.node, props.updateState, diagnosis)}>Set Diagnosis</button>
+            <input onChange={(e) => setDiagnosisState(e.target.value)} className="node-action-elem" type="text" value={diagnosis !== null ? diagnosis : ""} />
+        </div>
+        <div className="node-action">
+            <button className="node-action-elem" onClick={() => deleteNode(props.node!, props.updateState)}>Delete Node</button>
+        </div>
+    </div>
 }
+
+export default NodeAction

@@ -123,3 +123,17 @@
   z-index: 1;
   position: absolute;
 }
+
+.node-action {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.node-action-elem {
+  margin: 10px;
+}
+
+.node-action-null {
+  visibility: hidden;
+}

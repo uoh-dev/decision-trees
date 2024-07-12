@@ -2,12 +2,12 @@ import { useState } from 'react'
 import Nav from './Nav'
 import Tree, { TreeType } from './Tree'
 
-function Create(props: { winState: (window: string) => void, tree: TreeType }) {
-    const [selected, selector] = useState<TreeType | null>(null);
+function Create(props: { winState: (window: string) => void, tree: TreeType, measurements: string[] }) {
+    const [selected, selector] = useState<TreeType>(props.tree);
 
     return <>
-        <Nav winState={props.winState} selected="create"></Nav>
-        <Tree mode="edit" id="create" initialTree={props.tree} selected={selected} selector={selector} />
+        <Nav winState={props.winState} selected="create" />
+        <Tree mode="edit" id="create" initialTree={props.tree} selected={selected} selector={selector} measurements={props.measurements} />
     </>
 }
 

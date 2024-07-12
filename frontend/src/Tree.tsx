@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Node from "./Node";
+import NodeAction from "./NodeAction";
 
 const drawCanvas = (id: string) => () => {
     const crCanvas = document.getElementById(id + "-canvas") as HTMLCanvasElement;
@@ -7,7 +8,6 @@ const drawCanvas = (id: string) => () => {
     crCanvas.height = crNodes!.clientHeight;
     crCanvas.width = crNodes!.clientWidth;
     const ctx = crCanvas!.getContext("2d");
-    console.log(ctx);
     ctx!.strokeStyle = "gray";
     const rows = crNodes!.children;
     for (let i = 0; i < rows.length - 1; i++) {
@@ -57,10 +57,12 @@ export type Leaf = { type: "leaf", diagnosis: string | null };
 export type NodeType = { type: "tree", measurement: string, threshold: number, left: TreeType, right: TreeType };
 export type TreeType = NodeType | Leaf;
 
-function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType, selected: TreeType | null, selector: (node: TreeType) => void }) {
+function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType, selected: TreeType, selector: (node: TreeType) => void, measurements: string[] }) {
     useEffect(drawCanvas(props.id));
     useEffect(enableDrag(props.id));
-    const [tree, setTree] = useState(props.initialTree);
+    // c is inserted into state here to force re-render of component
+    // when setState is called with incremented c.
+    const [{ c, tree }, setTree] = useState({ c: 0 , tree: props.initialTree });
     const levels = [];
     let queue: ({ node: TreeType, parent: number })[] = [{ node: tree, parent: 0 }];
     while (queue.length > 0) {
@@ -74,12 +76,12 @@ function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType,
         });
     }
     return <>
-        <div>Selected node: {props.selected !== null && props.selected.type === "tree" ? props.selected.measurement : "none"}</div>
+        <NodeAction node={props.selected} updateState={() => setTree({ c: c + 1, tree })} measurements={props.measurements} />
         <div id={props.id + "-window"} className="tree-window">
             <canvas id={props.id + "-canvas"} className="tree-canvas" />
             <div id={props.id + "-nodes"} className="tree-nodes">
                 {levels.map((lvl, k) => <div key={k} style={{ display: "flex", justifyContent: "center" }}>
-                    {lvl.map(({ node, parent }, l) => <Node isSelected={node === props.selected} selector={() => props.selector(node)} key={l} node={node} parent={parent} updateState={() => setTree(tree)}></Node>)}
+                    {lvl.map(({ node, parent }, l) => <Node isSelected={node === props.selected} selector={() => props.selector(node)} key={l} node={node} parent={parent} updateState={() => setTree({ c: c + 1, tree })} />)}
                 </div>)}
             </div>
         </div>
