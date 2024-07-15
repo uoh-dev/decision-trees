@@ -1,13 +1,14 @@
 from flask import Blueprint, request, abort, url_for
 from backend.db import get_db
 from backend.tools.validator import validator
-from backend.tools import schemas
+from backend.tools.schemas.trees import trees_schema
+
 
 bp = Blueprint('trees', __name__, url_prefix='/trees')
 
 
 @bp.route('/', methods=['GET'])
-@validator(schemas.trees_schema)
+@validator(trees_schema)
 def get_trees():
     db = get_db()
 
