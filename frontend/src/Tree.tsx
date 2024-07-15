@@ -75,7 +75,7 @@ function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType,
             if (node.right !== null) queue.push({ node: node.right, parent: i });
         });
     }
-    return <>
+    return <div style={{ display: "flex" }}>
         <NodeAction node={props.selected} updateState={() => setTree({ c: c + 1, tree })} measurements={props.measurements} initialLog={[]} />
         <div id={props.id + "-window"} className="tree-window">
             <canvas id={props.id + "-canvas"} className="tree-canvas" />
@@ -85,7 +85,7 @@ function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType,
                 </div>)}
             </div>
         </div>
-    </>;
+    </div>;
 }
 
 export default Tree
