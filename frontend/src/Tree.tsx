@@ -76,7 +76,7 @@ function Tree(props: { id: string, mode: "edit" | "view", initialTree: TreeType,
         });
     }
     return <>
-        <NodeAction node={props.selected} updateState={() => setTree({ c: c + 1, tree })} measurements={props.measurements} />
+        <NodeAction node={props.selected} updateState={() => setTree({ c: c + 1, tree })} measurements={props.measurements} initialLog={[]} />
         <div id={props.id + "-window"} className="tree-window">
             <canvas id={props.id + "-canvas"} className="tree-canvas" />
             <div id={props.id + "-nodes"} className="tree-nodes">
