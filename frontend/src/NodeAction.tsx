@@ -114,7 +114,7 @@ function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => 
     const descRef = useRef<HTMLInputElement>(null);
     const [log, setLog] = useState<string[]>(props.initialLog);
     return <div style={{ display: "flex", flexDirection: "column" }}>
-        <div className="node-action">
+        <div>
             <button className="node-action-elem" style={{ backgroundColor: "#47afc9" }} onClick={() => {
                 if (props.node.type !== "leaf") return;
                 suggest(props.tree, props.node, () => {
@@ -122,32 +122,38 @@ function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => 
                     setLog(log.concat([`[SUGGESTION] ${(props.node as NodeType).measurement} at ${(props.node as NodeType).threshold}`]));
                 });
             }}>Suggest Next</button>
-            <label htmlFor="inpMeasurement">Measurement Name</label>
-            <select ref={measurementRef} defaultValue={props.node.type === "tree" ? props.node.measurement : props.measurements[0]} className="node-action-elem" name="inpMeasurement" id="inpMeasurement">
-                {props.measurements.map((m) => <option key={m} value={m}>{m}</option>)}
-            </select>
-            <label htmlFor="inpThreshold">Threshold</label>
-            <input ref={thresholdRef} className="node-action-elem" type="number" defaultValue={props.node.type === "tree" ? props.node.threshold : 0} />
-            <button className="node-action-elem" onClick={() => { setMeasurement(props.node, props.updateState, measurementRef.current!.value, thresholdRef.current!.valueAsNumber); setLog(log.concat([`[NODE SET] ${measurementRef.current!.value} at ${thresholdRef.current!.value}`])); }}>Set Measurement</button>
-            <button className="node-action-elem" disabled={props.node.type === "leaf" ? true : false} onClick={() => { removeNode(props.node!, props.updateState); setLog(log.concat([`[NODE REMOVED]`])); }}>Remove Node</button>
         </div>
-        <div className="node-action">
-            <label htmlFor="inpDiagnosis">Diagnosis</label>
-            <input ref={diagnosisRef} className="node-action-elem" type="text" defaultValue={props.node.type === "leaf" && props.node.diagnosis !== null ? props.node.diagnosis : ""} />
-            <button className="node-action-elem" disabled={props.node.type === "tree" ? true : false} onClick={() => { setDiagnosis(props.node, props.updateState, diagnosisRef.current!.value); setLog(log.concat([`[DIAGNOSIS SET] ${diagnosisRef.current!.value ?? "none"}`])); }}>Set Diagnosis</button>
-            <button className="node-action-elem" disabled={props.node.type === "tree" || props.node.diagnosis === null ? true : false} onClick={() => { setDiagnosis(props.node, props.updateState, null); setLog(log.concat([`[DIAGNOSIS REMOVED]`])); }}>Remove Diagnosis</button>
+        <div style={{ display: "flex" }}>
+            <div className="node-action">
+                <label htmlFor="inpMeasurement">Measurement Name</label>
+                <select ref={measurementRef} defaultValue={props.node.type === "tree" ? props.node.measurement : props.measurements[0]} className="node-action-elem" name="inpMeasurement" id="inpMeasurement">
+                    {props.measurements.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+                <label htmlFor="inpThreshold">Threshold</label>
+                <input ref={thresholdRef} className="node-action-elem" type="number" defaultValue={props.node.type === "tree" ? props.node.threshold : 0} />
+                <button className="node-action-elem" onClick={() => { setMeasurement(props.node, props.updateState, measurementRef.current!.value, thresholdRef.current!.valueAsNumber); setLog(log.concat([`[NODE SET] ${measurementRef.current!.value} at ${thresholdRef.current!.value}`])); }}>Set Measurement</button>
+                <button className="node-action-elem" disabled={props.node.type === "leaf" ? true : false} onClick={() => { removeNode(props.node!, props.updateState); setLog(log.concat([`[NODE REMOVED]`])); }}>Remove Node</button>
+            </div>
+            <div className="node-action">
+                <label htmlFor="inpDiagnosis">Diagnosis</label>
+                <input ref={diagnosisRef} className="node-action-elem" type="text" defaultValue={props.node.type === "leaf" && props.node.diagnosis !== null ? props.node.diagnosis : ""} />
+                <button className="node-action-elem" disabled={props.node.type === "tree" ? true : false} onClick={() => { setDiagnosis(props.node, props.updateState, diagnosisRef.current!.value); setLog(log.concat([`[DIAGNOSIS SET] ${diagnosisRef.current!.value ?? "none"}`])); }}>Set Diagnosis</button>
+                <button className="node-action-elem" disabled={props.node.type === "tree" || props.node.diagnosis === null ? true : false} onClick={() => { setDiagnosis(props.node, props.updateState, null); setLog(log.concat([`[DIAGNOSIS REMOVED]`])); }}>Remove Diagnosis</button>
+            </div>
         </div>
-        <div className="node-action">
-            <label htmlFor="name">Name</label>
-            <input ref={nameRef} type="text" className="node-action-elem" />
-            <label htmlFor="desc">Description</label>
-            <input ref={descRef} type="text" className="node-action-elem" />
-            <button className="node-action-elem" style={{ backgroundColor: "green" }} onClick={() => save(props.tree, props.updateState, nameRef.current!.value, descRef.current!.value, log.join("\n"))}>Save</button>
-            <button className="node-action-elem" style={{ backgroundColor: "#850e05" }} onClick={() => { startOver(props.tree, props.updateState); setLog([]); }}>Start Over</button>
-        </div>
-        <div className="node-action console">
-            <div>&gt;</div>
-            {reverse(log).map((entry, l) => <div key={l}>{entry}</div>)}
+        <div style={{ display: "flex" }}>
+            <div className="node-action">
+                <label htmlFor="name">Name</label>
+                <input ref={nameRef} type="text" className="node-action-elem" />
+                <label htmlFor="desc">Description</label>
+                <input ref={descRef} type="text" className="node-action-elem" />
+                <button className="node-action-elem" style={{ backgroundColor: "green" }} onClick={() => save(props.tree, props.updateState, nameRef.current!.value, descRef.current!.value, log.join("\n"))}>Save</button>
+                <button className="node-action-elem" style={{ backgroundColor: "#850e05" }} onClick={() => { startOver(props.tree, props.updateState); setLog([]); }}>Start Over</button>
+            </div>
+            <div className="node-action console">
+                <div>&gt;</div>
+                {reverse(log).map((entry, l) => <div key={l}>{entry}</div>)}
+            </div>
         </div>
     </div>
 }

@@ -20,7 +20,8 @@ def get_trees():
         return abort(404)
 
     for tree in trees:
-        tree['_id'] = str(tree['_id'])
+        tree['id'] = str(tree['_id'])
+        del tree["_id"]
 
     return {
         'data': trees,

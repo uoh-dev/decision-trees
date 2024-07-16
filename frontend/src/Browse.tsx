@@ -10,7 +10,7 @@ function Browse(props: { winState: (window: string) => void, setTree: Dispatch<S
         const res = await fetch(`/trees`);
         const treesRes: GetTreesResponse = await res.json();
         setTrees(trees.concat(treesRes.data));
-    })() });
+    })() }, []);
 
     return <>
         <Nav winState={props.winState} selected="browse"></Nav>

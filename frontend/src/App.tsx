@@ -15,7 +15,7 @@ function App() {
         const res = await fetch(`/measurements`);
         const measures = await res.json();
         setMeasuremetss(measures);
-    })() });
+    })() }, []);
 
     switch (window) {
         case "browse": return <Browse winState={setWindow} setTree={setTree} />

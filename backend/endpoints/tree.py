@@ -15,7 +15,8 @@ def get_tree():
     if not (tree := db.retrieve_tree(request.args["id"])):
         return abort(404, f"tree with id {request.args['id']} not found")
 
-    tree['_id'] = str(tree['_id'])
+    tree['id'] = str(tree['_id'])
+    del tree["_id"]
     return tree
 
 
