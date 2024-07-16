@@ -7,7 +7,7 @@ from backend.tools.schemas.id import id_schema
 bp = Blueprint('evaluation', __name__, url_prefix="/evaluation")
 
 
-@bp.route('/', methods=['POST'])
+@bp.route('/', methods=['GET'])
 @validator(id_schema)
 def get_evaluation():
     db = get_db()
