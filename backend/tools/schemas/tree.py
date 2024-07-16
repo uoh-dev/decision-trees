@@ -4,8 +4,7 @@ tree_schema = {
         "name": {"type": "string"},
         "description": {"type": "string"},
         "tree": {
-            "type": "object",
-            "minItems": 1,
+            "type": "object"
         },
         "log": {"type": "string"}
     },
