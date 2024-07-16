@@ -21,8 +21,7 @@ export type GetTreesResponse = {
     data: {
         id: string,
         name: string,
-        description: string,
-        amount_nodes: number
+        description: string
     }[],
     next: string | null
 };

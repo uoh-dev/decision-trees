@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { Leaf, NodeType, TreeType } from "./Tree";
-import { APPURL } from "./App";
 import { PostSuggestionResponse } from "./APITypes";
 
 function reverse<T>(inp: T[]) {
@@ -46,7 +45,7 @@ function removeNode(node: TreeType, updateState: () => void) {
 }
 
 async function save(tree: TreeType, updateState: () => void, name: string, description: string, log: string) {
-    await fetch(`${APPURL}/tree`, {
+    await fetch(`/tree`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -58,6 +57,7 @@ async function save(tree: TreeType, updateState: () => void, name: string, descr
             log
         })
     });
+    updateState();
 }
 
 function startOver(tree: TreeType, updateState: () => void) {
@@ -88,7 +88,7 @@ async function suggest(tree: TreeType, leaf: Leaf, updateState: () => void) {
     }
     /* eslint-disable-next-line */
     (leaf as any).marked = true;
-    const res = await fetch(`${APPURL}/suggestion`, {
+    const res = await fetch(`/suggestion`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
