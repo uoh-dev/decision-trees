@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Leaf, TreeType } from "./Tree";
+import { Leaf, NodeType, TreeType } from "./Tree";
 import { APPURL } from "./App";
 import { PostSuggestionResponse } from "./APITypes";
 
@@ -115,7 +115,13 @@ function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => 
     const [log, setLog] = useState<string[]>(props.initialLog);
     return <div style={{ display: "flex", flexDirection: "column" }}>
         <div className="node-action">
-            <button className="node-action-elem" style={{ backgroundColor: "#47afc9" }} onClick={() => props.node.type === "leaf" ? suggest(props.tree, props.node, props.updateState) : () => {}}>Suggest Next</button>
+            <button className="node-action-elem" style={{ backgroundColor: "#47afc9" }} onClick={() => {
+                if (props.node.type !== "leaf") return;
+                suggest(props.tree, props.node, () => {
+                    props.updateState();
+                    setLog(log.concat([`[SUGGESTION] ${(props.node as NodeType).measurement} at ${(props.node as NodeType).threshold}`]));
+                });
+            }}>Suggest Next</button>
             <label htmlFor="inpMeasurement">Measurement Name</label>
             <select ref={measurementRef} defaultValue={props.node.type === "tree" ? props.node.measurement : props.measurements[0]} className="node-action-elem" name="inpMeasurement" id="inpMeasurement">
                 {props.measurements.map((m) => <option key={m} value={m}>{m}</option>)}
