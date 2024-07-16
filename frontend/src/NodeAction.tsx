@@ -1,6 +1,10 @@
 import { useRef, useState } from "react";
 import { TreeType } from "./Tree";
 
+function reverse<T>(inp: T[]) {
+    return Array.from(inp).reverse();
+}
+
 function setMeasurement(node: TreeType, updateState: () => void, measurement: string, threshold: number) {
     if (node.type === "leaf") {
         const diagnosis = node.diagnosis;
@@ -39,7 +43,21 @@ function removeNode(node: TreeType, updateState: () => void) {
     updateState();
 }
 
-function NodeAction(props: { node: TreeType, updateState: () => void, measurements: string[], initialLog: string[] }) {
+function startOver(tree: TreeType, updateState: () => void) {
+    /* eslint-disable-next-line */
+    const nRoot = tree as any;
+    if (nRoot.type === "tree") {
+        delete nRoot.measurement;
+        delete nRoot.threshold;
+        delete nRoot.left;
+        delete nRoot.right;
+    }
+    nRoot.type = "leaf";
+    nRoot.diagnosis = null;
+    updateState();
+}
+
+function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => void, measurements: string[], initialLog: string[] }) {
     const measurementRef = useRef<HTMLSelectElement>(null);
     const thresholdRef = useRef<HTMLInputElement>(null);
     const diagnosisRef = useRef<HTMLInputElement>(null);
@@ -49,24 +67,28 @@ function NodeAction(props: { node: TreeType, updateState: () => void, measuremen
     // node's current values.
     return <div style={{ display: "flex", flexDirection: "column" }}>
         <div className="node-action">
+            <label htmlFor="inpMeasurement">Measurement Name</label>
             <select ref={measurementRef} defaultValue={props.node.type === "tree" ? props.node.measurement : props.measurements[0]} className="node-action-elem" name="inpMeasurement" id="inpMeasurement">
                 {props.measurements.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
+            <label htmlFor="inpThreshold">Threshold</label>
             <input ref={thresholdRef} className="node-action-elem" type="number" defaultValue={props.node.type === "tree" ? props.node.threshold : 0} />
             <button className="node-action-elem" onClick={() => { setMeasurement(props.node, props.updateState, measurementRef.current!.value, thresholdRef.current!.valueAsNumber); setLog(log.concat([`[NODE SET] ${measurementRef.current!.value} at ${thresholdRef.current!.value}`])); }}>Set Measurement</button>
             <button className="node-action-elem" disabled={props.node.type === "leaf" ? true : false} onClick={() => { removeNode(props.node!, props.updateState); setLog(log.concat([`[NODE REMOVED]`])); }}>Remove Node</button>
         </div>
         <div className="node-action">
+            <label htmlFor="inpDiagnosis">Diagnosis</label>
             <input ref={diagnosisRef} className="node-action-elem" type="text" defaultValue={props.node.type === "leaf" && props.node.diagnosis !== null ? props.node.diagnosis : ""} />
             <button className="node-action-elem" disabled={props.node.type === "tree" ? true : false} onClick={() => { setDiagnosis(props.node, props.updateState, diagnosisRef.current!.value); setLog(log.concat([`[DIAGNOSIS SET] ${diagnosisRef.current!.value ?? "none"}`])); }}>Set Diagnosis</button>
             <button className="node-action-elem" disabled={props.node.type === "tree" || props.node.diagnosis === null ? true : false} onClick={() => { setDiagnosis(props.node, props.updateState, null); setLog(log.concat([`[DIAGNOSIS REMOVED]`])); }}>Remove Diagnosis</button>
         </div>
         <div className="node-action">
             <button className="node-action-elem" style={{ backgroundColor: "green" }}>Save</button>
+            <button className="node-action-elem" style={{ backgroundColor: "#850e05" }} onClick={() => { startOver(props.tree, props.updateState); setLog([]); }}>Start Over</button>
         </div>
         <div className="node-action console">
-            {log.map((entry, l) => <text key={l}>{entry}</text>)}
-            <text>&gt;</text>
+            <div>&gt;</div>
+            {reverse(log).map((entry, l) => <div key={l}>{entry}</div>)}
         </div>
     </div>
 }
