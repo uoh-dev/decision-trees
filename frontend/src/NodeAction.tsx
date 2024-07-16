@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { TreeType } from "./Tree";
+import { Leaf, TreeType } from "./Tree";
 import { APPURL } from "./App";
+import { PostSuggestionResponse } from "./APITypes";
 
 function reverse<T>(inp: T[]) {
     return Array.from(inp).reverse();
@@ -73,6 +74,38 @@ function startOver(tree: TreeType, updateState: () => void) {
     updateState();
 }
 
+async function suggest(tree: TreeType, leaf: Leaf, updateState: () => void) {
+    const q = [tree];
+    let curr;
+    while ((curr = q.shift())) {
+        if (curr.type === "tree") {
+            if (curr.left !== null) q.push(curr.left);
+            if (curr.right !== null) q.push(curr.right);
+        } else {
+            /* eslint-disable-next-line */
+            (curr as any).marked = false;
+        }
+    }
+    /* eslint-disable-next-line */
+    (leaf as any).marked = true;
+    const res = await fetch(`${APPURL}/suggestion`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tree)
+    });
+    const { measurement, threshold }: PostSuggestionResponse = await res.json();
+    /* eslint-disable-next-line */
+    const nNode = (leaf as any);
+    nNode.type = "tree";
+    nNode.measurement = measurement;
+    nNode.threshold = threshold;
+    nNode.left = { type: "leaf", diagnosis: null };
+    nNode.right = { type: "leaf", diagnosis: null };
+    updateState();
+}
+
 function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => void, measurements: string[], initialLog: string[] }) {
     const measurementRef = useRef<HTMLSelectElement>(null);
     const thresholdRef = useRef<HTMLInputElement>(null);
@@ -80,11 +113,9 @@ function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => 
     const nameRef = useRef<HTMLInputElement>(null);
     const descRef = useRef<HTMLInputElement>(null);
     const [log, setLog] = useState<string[]>(props.initialLog);
-    // TODO: default values for measurement/threshold/diagnosis should
-    // update when switching to another node, to actually show that
-    // node's current values.
     return <div style={{ display: "flex", flexDirection: "column" }}>
         <div className="node-action">
+            <button className="node-action-elem" style={{ backgroundColor: "#47afc9" }} onClick={() => props.node.type === "leaf" ? suggest(props.tree, props.node, props.updateState) : () => {}}>Suggest Next</button>
             <label htmlFor="inpMeasurement">Measurement Name</label>
             <select ref={measurementRef} defaultValue={props.node.type === "tree" ? props.node.measurement : props.measurements[0]} className="node-action-elem" name="inpMeasurement" id="inpMeasurement">
                 {props.measurements.map((m) => <option key={m} value={m}>{m}</option>)}
