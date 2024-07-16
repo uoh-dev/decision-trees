@@ -1,5 +1,5 @@
 from flask import Blueprint, request, abort, url_for
-from backend.db import get_db
+from backend.g_items import get_db
 from backend.tools.validator import validator
 from backend.tools.schemas.trees import trees_schema
 

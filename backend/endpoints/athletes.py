@@ -1,5 +1,5 @@
 from flask import Blueprint, request, abort, url_for
-from backend.db import get_db
+from backend.g_items import get_db
 
 
 bp = Blueprint('athletes', __name__, url_prefix="/athletes")
@@ -15,8 +15,10 @@ def get_athletes():
     if athletes is None:
         return abort(404)
 
+    next_url = url_for('athletes.get_athletes', limit=limit, offset=offset+limit, _external=True) if has_next else None
+
     return {
         'data': athletes,
-        'next': url_for('athletes.get_athletes', limit=limit, offset=offset+limit, _external=True) if has_next else None,
+        'next': next_url
     }
 

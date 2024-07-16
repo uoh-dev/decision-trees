@@ -1,7 +1,6 @@
 from typing import Mapping
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 from bson.objectid import ObjectId
-import click
 
 
 class Database:
@@ -15,7 +14,7 @@ class Database:
         )
 
         self.db = self.client[auth_dict['database']]
-        click.echo(f'Connected to MongoDB-database {auth_dict["database"]}.')
+        print(f'Connected to MongoDB-database {auth_dict["database"]}.')
 
     def retrieve_measurements(self):
         return list(
@@ -73,8 +72,33 @@ class Database:
 
         return result[:limit], has_next
 
+    def retrieve_all_trees(self):
+        return list(
+            self.db['trees'].find()
+        )
+
     def insert_tree(self, tree: dict):
         self.db['trees'].insert_one(tree)
+
+    def insert_measurements(self, measurements: str) -> None:
+        self.db['measurements'].insert_many(
+            [
+                {
+                    "name": measurement,
+                    "label": None
+                } for measurement in measurements
+            ]
+        )
+
+    def retrieve_measurement_mapping(self) -> list[tuple[str, int]]:
+        data = self.db['measurements'].find()
+        return [(measurement_object['name'], measurement_object['label']) for measurement_object in data]
+
+    def update_measurement_labels(self, mapping: list[tuple[str, int]]) -> None:
+        updates = [
+            UpdateOne({'name': measurement}, {'$set': {'label': label}}) for measurement, label in mapping
+        ]
+        self.db['measurements'].bulk_write(updates)
 
     def close(self):
         self.client.close()

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, abort
-from backend.db import get_db
+from backend.g_items import get_db, get_predictor, predictor_exists
 from backend.tools.validator import validator
 from backend.tools.schemas.tree import tree_schema
 from backend.tools.schemas.id import id_schema
@@ -26,4 +26,8 @@ def post_tree():
     request_tree = request.get_json()
     db.insert_tree(request_tree)
     request_tree['_id'] = str(request_tree['_id'])
+
+    if predictor_exists():
+        get_predictor().train(request_tree)
+
     return request.get_json()

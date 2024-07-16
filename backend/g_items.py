@@ -2,6 +2,7 @@ import os
 from flask import g, current_app
 from yaml import safe_load
 from backend.database.mongodb import Database
+from backend.ml.node_predictor import NodePredictor
 
 
 def get_db():
@@ -10,6 +11,17 @@ def get_db():
             g.db = Database(safe_load(stream))
 
     return g.db
+
+
+def get_predictor() -> NodePredictor:
+    if 'predictor' not in g:
+        g.predictor = NodePredictor(get_db())
+
+    return g.predictor
+
+
+def predictor_exists() -> bool:
+    return 'predictor' in g
 
 
 def close_db(e=None):
