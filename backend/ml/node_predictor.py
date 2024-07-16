@@ -44,7 +44,7 @@ class NodePredictor:
         raise ValueError('Tree has no marked leaf.')
 
     def train(self, trees: list[dict] | dict) -> None:
-        if trees is dict: trees = list[trees]
+        if trees is dict: trees = [trees]
         features, labels = preprocess_trees(trees, self.max_path_length, self.encoder)
         print('Training predictor on trees.')
         self.model.fit(features, labels)
