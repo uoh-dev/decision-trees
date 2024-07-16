@@ -6,11 +6,12 @@ from backend.tools.types import Content
 class Encoder:
     def __init__(self, database: Database):
         self._encoder = LabelEncoder()
-        self.measurement_mapping = database.retrieve_measurement_mapping()
+        self.map = None
+        measurement_mapping = database.retrieve_measurement_mapping()
 
         # Load measurement encoding mapping if it already exists
-        if self.measurement_mapping and all([encoded is not None for _, encoded in self.measurement_mapping]):
-            self.map = dict(self.measurement_mapping)
+        if measurement_mapping and all([encoded is not None for _, encoded in measurement_mapping]):
+            self.map = dict(measurement_mapping)
         else:
             measurements = database.retrieve_measurements()
             if not measurements:

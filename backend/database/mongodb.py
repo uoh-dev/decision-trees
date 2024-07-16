@@ -77,6 +77,16 @@ class Database:
             self.db['trees'].find()
         )
 
+    def retrieve_all_athletes(self) -> list[dict]:
+        return list(
+            self.db['athletes'].find(
+                {},
+                projection={
+                    "_id": 0
+                }
+            )
+        )
+
     def insert_tree(self, tree: dict) -> None:
         self.db['trees'].insert_one(tree)
 

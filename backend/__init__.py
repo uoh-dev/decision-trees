@@ -1,14 +1,23 @@
 from flask import Flask
 from werkzeug.exceptions import HTTPException
 from backend import g_items
-from backend.endpoints import tree, trees, athletes, measurements, suggestion
+from backend.endpoints import tree, trees, athletes, measurements, suggestion, evaluation
 
 
 def create_app():
     app = Flask(__name__)
 
-    for bp in [tree.bp, trees.bp, athletes.bp, measurements.bp, suggestion.bp]:
-        app.register_blueprint(bp)
+    blueprints = [
+        tree.bp,
+        trees.bp,
+        athletes.bp,
+        measurements.bp,
+        suggestion.bp,
+        evaluation.bp
+    ]
+
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint)
 
     @app.errorhandler(HTTPException)
     def error_handler(error):
