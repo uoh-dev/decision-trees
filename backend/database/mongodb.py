@@ -90,7 +90,7 @@ class Database:
     def insert_tree(self, tree: dict) -> None:
         self.db['trees'].insert_one(tree)
 
-    def insert_measurements(self, measurements: str) -> None:
+    def insert_measurements(self, measurements: list[str]) -> None:
         self.db['measurements'].insert_many(
             [
                 {
