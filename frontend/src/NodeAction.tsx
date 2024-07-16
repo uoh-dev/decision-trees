@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { TreeType } from "./Tree";
+import { APPURL } from "./App";
 
 function reverse<T>(inp: T[]) {
     return Array.from(inp).reverse();
@@ -43,6 +44,21 @@ function removeNode(node: TreeType, updateState: () => void) {
     updateState();
 }
 
+async function save(tree: TreeType, updateState: () => void, name: string, description: string, log: string) {
+    await fetch(`${APPURL}/tree`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name,
+            description,
+            tree,
+            log
+        })
+    });
+}
+
 function startOver(tree: TreeType, updateState: () => void) {
     /* eslint-disable-next-line */
     const nRoot = tree as any;
@@ -61,6 +77,8 @@ function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => 
     const measurementRef = useRef<HTMLSelectElement>(null);
     const thresholdRef = useRef<HTMLInputElement>(null);
     const diagnosisRef = useRef<HTMLInputElement>(null);
+    const nameRef = useRef<HTMLInputElement>(null);
+    const descRef = useRef<HTMLInputElement>(null);
     const [log, setLog] = useState<string[]>(props.initialLog);
     // TODO: default values for measurement/threshold/diagnosis should
     // update when switching to another node, to actually show that
@@ -83,7 +101,11 @@ function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => 
             <button className="node-action-elem" disabled={props.node.type === "tree" || props.node.diagnosis === null ? true : false} onClick={() => { setDiagnosis(props.node, props.updateState, null); setLog(log.concat([`[DIAGNOSIS REMOVED]`])); }}>Remove Diagnosis</button>
         </div>
         <div className="node-action">
-            <button className="node-action-elem" style={{ backgroundColor: "green" }}>Save</button>
+            <label htmlFor="name">Name</label>
+            <input ref={nameRef} type="text" className="node-action-elem" />
+            <label htmlFor="desc">Description</label>
+            <input ref={descRef} type="text" className="node-action-elem" />
+            <button className="node-action-elem" style={{ backgroundColor: "green" }} onClick={() => save(props.tree, props.updateState, nameRef.current!.value, descRef.current!.value, log.join("\n"))}>Save</button>
             <button className="node-action-elem" style={{ backgroundColor: "#850e05" }} onClick={() => { startOver(props.tree, props.updateState); setLog([]); }}>Start Over</button>
         </div>
         <div className="node-action console">
