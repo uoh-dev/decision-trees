@@ -29,3 +29,7 @@ export type PostSuggestionResponse = {
     measurement: string,
     threshold: number
 };
+export type GetEvaluationResponse = {
+    name: string,
+    diagnosis: string | null
+}[];
