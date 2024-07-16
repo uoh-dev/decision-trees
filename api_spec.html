@@ -16,7 +16,7 @@
 </head>
 <body>
     <h1>Decision Tree Builder API spec</h1>
-    <h2 style="padding-bottom: 30px">Version 6</h2>
+    <h2 style="padding-bottom: 30px">Version 7</h2>
     <div style="padding-bottom: 20px;">
         <h2>Type Aliases</h2>
         <div class="obj">
@@ -108,7 +108,10 @@
     <div class="endpoint" id="post-suggestion">
         <h3>POST /suggestion</h3>
         <div class="obj">body &lt;marked_tree&gt;</div>
-        <div class="obj">returns &lt;tree&gt;</div>
+        <div class="obj">returns {
+    "measurement": string,
+    "threshold": number
+}       </div>
     </div>
     The returned subtree is suggested to replace the marked leaf in the submitted marked tree. This method does not return whole trees.
 </body>
