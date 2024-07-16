@@ -25,10 +25,11 @@ def get_tree():
 def post_tree():
     db = get_db()
     request_tree = request.get_json()
+
     db.insert_tree(request_tree)
     request_tree['_id'] = str(request_tree['_id'])
 
-    if predictor_exists():
+    if predictor_exists() and request_tree['tree']['type'] == 'tree':
         get_predictor().train(request_tree)
 
     return request.get_json()
