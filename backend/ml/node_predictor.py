@@ -13,7 +13,7 @@ class NodePredictor:
         self.n_estimators = 100
         self.model = self._create_model()
 
-        trees = self.database.retrieve_all_trees()
+        trees = [tree['tree'] for tree in self.database.retrieve_all_trees()]
         if not trees:
             raise Exception('Predictor Model cannot be created: No trees stored in database.')
         self.train(trees)

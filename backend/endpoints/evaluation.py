@@ -13,7 +13,7 @@ def get_evaluation():
     db = get_db()
     if not (tree := db.retrieve_tree(request.args["id"])):
         return abort(404, f"tree with id {request.args['id']} not found")
-    return _evaluate(db, tree)
+    return _evaluate(db, tree['tree'])
 
 
 def _evaluate(db: Database, tree: dict) -> list[dict[str, str]]:
