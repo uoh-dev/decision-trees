@@ -32,9 +32,9 @@ def _adjust_path_length(paths: list[Path], max_path_length: int) -> list[Path]:
 
 def _get_datapoints(trees: list[dict], encoder: Encoder) -> list[tuple[Path, Content]]:
     all_datapoints: list[tuple[Path, Content]] = []
-    for tree in trees:
+    for root in trees:
         datapoints = []
-        _traverse_tree(tree['tree'], datapoints, list(), encoder)
+        _traverse_tree(root, datapoints, list(), encoder)
         all_datapoints.extend(datapoints)
 
     return all_datapoints

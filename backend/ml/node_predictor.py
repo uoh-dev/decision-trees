@@ -24,9 +24,7 @@ class NodePredictor:
         return model
 
     @staticmethod
-    def _find_feature(marked_tree: dict) -> list[tuple[str, float]]:
-        root = marked_tree['tree']
-
+    def _find_feature(root: dict) -> list[tuple[str, float]]:
         # Traverse tree to find leaf that is marked
         stack = [([], root)]
         while stack:

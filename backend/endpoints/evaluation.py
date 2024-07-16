@@ -32,7 +32,7 @@ def _evaluate(db: Database, tree: dict) -> list[dict[str, str]]:
     for athlete in athletes:
         diagnosis: dict[str, str] = {'name': athlete['name']}
 
-        current_node = tree['tree']
+        current_node = tree
         while current_node['type'] == 'tree':
             if athlete['measurements'][current_node['measurement']] <= current_node['threshold']:
                 current_node = current_node['left']
