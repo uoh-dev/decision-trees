@@ -9,5 +9,4 @@ bp = Blueprint('measurements', __name__, url_prefix="/measurements")
 def get_measurements():
     db = get_db()
     measurements = db.retrieve_measurements()
-    print(measurements)
     return measurements

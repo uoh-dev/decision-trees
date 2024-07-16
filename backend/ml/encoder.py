@@ -21,7 +21,7 @@ class Encoder:
 
             # Store mapping in database
             classes = self._encoder.classes_
-            encoded_classes = map(int, self._encoder.transform(self._encoder.classes_))
+            encoded_classes = map(lambda x: int(x) + 1, self._encoder.transform(self._encoder.classes_))
             mapping = list(zip(classes, encoded_classes))
             database.update_measurement_labels(mapping)
 
