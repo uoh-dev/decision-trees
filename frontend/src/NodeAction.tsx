@@ -115,7 +115,7 @@ function NodeAction(props: { node: TreeType, tree: TreeType, updateState: () => 
     const [log, setLog] = useState<string[]>(props.initialLog);
     return <div style={{ display: "flex", flexDirection: "column" }}>
         <div>
-            <button className="node-action-elem" style={{ backgroundColor: "#47afc9" }} onClick={() => {
+            <button disabled={props.node.type === "tree" ? true : false} className="node-action-elem" style={{ backgroundColor: "#47afc9" }} onClick={() => {
                 if (props.node.type !== "leaf") return;
                 suggest(props.tree, props.node, () => {
                     props.updateState();
