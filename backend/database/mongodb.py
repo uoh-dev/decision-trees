@@ -50,7 +50,7 @@ class Database:
             }
         )
 
-    def retrieve_trees(self, limit: int, offset: int) -> tuple[list[Mapping], bool]:
+    def retrieve_trees(self, limit: int, offset: int) -> tuple[list[dict], bool]:
         pipeline = [
             {
                 "$project": {

@@ -7,11 +7,6 @@ tree_schema = {
             "type": "array",
             "items": {
                 "type": "object",
-                "properties": {
-                    "measurement": {"type": "string", "minLength": 1},
-                    "threshold": {"type": "number"},
-                },
-                "required": ["measurement", "threshold"],
             },
             "minItems": 1,
         },
