@@ -1,4 +1,4 @@
-import reactLogo from './assets/react.svg'
+import reactLogo from './assets/866532842400907285.png'
 
 function Nav(props: { winState: (window: string) => void; selected: string }) {
     return (

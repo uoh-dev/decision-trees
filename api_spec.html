@@ -16,7 +16,7 @@
 </head>
 <body>
     <h1>Decision Tree Builder API spec</h1>
-    <h2 style="padding-bottom: 30px">Version 6</h2>
+    <h2 style="padding-bottom: 30px">Version 8</h2>
     <div style="padding-bottom: 20px;">
         <h2>Type Aliases</h2>
         <div class="obj">
@@ -45,6 +45,7 @@
             <li><a href="#post-tree">POST /tree</a></li>
             <li><a href="#get-trees">GET /trees</a></li>
             <li><a href="#post-suggestion">POST /suggestion</a></li>
+            <li><a href="#get-evaluation">GET /evaluation</a></li>
         </table>
     </div>
     <div id="get-measurements" class="endpoint">
@@ -108,7 +109,20 @@
     <div class="endpoint" id="post-suggestion">
         <h3>POST /suggestion</h3>
         <div class="obj">body &lt;marked_tree&gt;</div>
-        <div class="obj">returns &lt;tree&gt;</div>
+        <div class="obj">returns {
+    "measurement": string,
+    "threshold": number
+}       </div>
     </div>
     The returned subtree is suggested to replace the marked leaf in the submitted marked tree. This method does not return whole trees.
+    <div class="endpoint" id="get-evaluation">
+        <h3>GET /evaluation</h3>
+        <div class="obj">query {
+    "id": string
+}       </div>
+        <div class="obj">returns {
+    "name": string,
+    "diagnosis": string?
+}[]     </div>
+    </div>
 </body>

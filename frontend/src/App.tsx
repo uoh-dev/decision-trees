@@ -6,19 +6,28 @@ import Evaluate from './Evaluate'
 import Nav from "./Nav"
 import { TreeType } from './Tree'
 
-function App() {
-  const [window, setWindow] = useState("browse");
-  const [tree, setTree] = useState<TreeType>({ type: "tree", measurement: "aabcabc", threshold: 3, left: { type: "tree", measurement: "babcabc", threshold: 3, left: { type: "tree", measurement: "aabcabc", threshold: 3, left: { type: "tree", measurement: "aabcabc", threshold: 3, left: { type: "leaf", diagnosis: null }, right: { type: "leaf", diagnosis: null } }, right: { type: "tree", measurement: "aabcabc", threshold: 3, left: { type: "leaf", diagnosis: null }, right: { type: "leaf", diagnosis: null } } }, right: { type: "tree", measurement: "aabcabc", threshold: 2, left: { type: "leaf", diagnosis: null }, right: { type: "leaf", diagnosis: null } } }, right: { type: "tree", measurement: "cabcabc", threshold: 3, left: { type: "leaf", diagnosis: null }, right: { type: "leaf", diagnosis: null } }});
+export const APPURL = "lumyn.org:25577";
 
-  switch (window) {
-      case "browse": return <Browse trees={[{name:"a",description:"a desc"},{name:"b",description:"b desc"}]} winState={setWindow} />
-      case "create": return <Create winState={setWindow} tree={tree} measurements={["aabcabc", "babcabc", "cabcabc"]} />
-      case "evaluate": return <Evaluate winState={setWindow} />
-      default: return <>
-          <Nav winState={setWindow} selected="none"></Nav>
-          no window selected
-      </>;
-  }
+function App() {
+    const [window, setWindow] = useState("browse");
+    const [tree, setTree] = useState<{ c: number, tree: TreeType }>({ c: 0, tree: { type: "leaf", diagnosis: null }});
+    const [measurements, setMeasuremetss] = useState<string[]>([]);
+
+    (async () => {
+        const res = await fetch(`${APPURL}/measurements`);
+        const measures = await res.json();
+        setMeasuremetss(measures);
+    })();
+
+    switch (window) {
+        case "browse": return <Browse winState={setWindow} setTree={setTree} />
+        case "create": return <Create winState={setWindow} tree={tree} setTree={setTree} measurements={measurements} />
+        case "evaluate": return <Evaluate winState={setWindow} />
+        default: return <>
+            <Nav winState={setWindow} selected="none"></Nav>
+            no window selected
+        </>;
+    }
 }
 
 export default App
