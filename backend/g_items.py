@@ -5,7 +5,7 @@ from backend.database.mongodb import Database
 from backend.ml.node_predictor import NodePredictor
 
 
-def get_db():
+def get_db() -> Database:
     if 'db' not in g:
         with open(os.path.join(current_app.root_path, "database_secret.yml")) as stream:
             g.db = Database(safe_load(stream))

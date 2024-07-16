@@ -16,7 +16,7 @@ class Database:
         self.db = self.client[auth_dict['database']]
         print(f'Connected to MongoDB-database {auth_dict["database"]}.')
 
-    def retrieve_measurements(self):
+    def retrieve_measurements(self) -> list[str]:
         return list(
             self.db['measurements'].aggregate(
                 pipeline=[
@@ -37,9 +37,9 @@ class Database:
         has_next = len(result) > limit
         return result[:limit], has_next
 
-    def retrieve_tree(self, tree_id: str):
+    def retrieve_tree(self, tree_id: str) -> dict:
         if not ObjectId.is_valid(tree_id):
-            return []
+            return {}
 
         return self.db['trees'].find_one(
             filter={
@@ -72,12 +72,12 @@ class Database:
 
         return result[:limit], has_next
 
-    def retrieve_all_trees(self):
+    def retrieve_all_trees(self) -> list[dict]:
         return list(
             self.db['trees'].find()
         )
 
-    def insert_tree(self, tree: dict):
+    def insert_tree(self, tree: dict) -> None:
         self.db['trees'].insert_one(tree)
 
     def insert_measurements(self, measurements: str) -> None:
@@ -100,5 +100,5 @@ class Database:
         ]
         self.db['measurements'].bulk_write(updates)
 
-    def close(self):
+    def close(self) -> None:
         self.client.close()
