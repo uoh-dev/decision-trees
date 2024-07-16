@@ -56,7 +56,6 @@ class Database:
                 "$project": {
                     "name": 1,
                     "description": 1,
-                    "amount_nodes": {"$size": "$tree"},
                 }
             },
             {
