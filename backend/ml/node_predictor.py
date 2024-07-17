@@ -3,6 +3,7 @@ from sklearn.ensemble import RandomForestRegressor
 from backend.database.mongodb import Database
 from backend.ml.encoder import Encoder
 from backend.ml.preprocessing import preprocess_trees, preprocess_feature
+from sklearn.exceptions import NotFittedError
 
 
 class NodePredictor:
@@ -15,9 +16,8 @@ class NodePredictor:
 
         trees = [tree['tree'] for tree in self.database.retrieve_all_trees()]
         trees = [tree for tree in trees if tree['type'] != 'leaf']
-        if not trees:
-            raise Exception('Predictor Model cannot be created: No trees stored in database.')
-        self.train(trees)
+        if len(trees) > 0:
+            self.train(trees)
 
     def _create_model(self) -> MultiOutputRegressor:
         model = MultiOutputRegressor(RandomForestRegressor(self.n_estimators, warm_start=True))
@@ -51,7 +51,11 @@ class NodePredictor:
     def predict(self, tree: dict) -> tuple[str, float]:
         feature = self._find_feature(tree)
         print('Predicting content of node.')
-        prediction = self.model.predict([preprocess_feature(feature, self.encoder, self.max_path_length)])[0]
-        return self.encoder.decode(int(prediction[0])), float(prediction[1])
+        try:
+            prediction = self.model.predict([preprocess_feature(feature, self.encoder, self.max_path_length)])[0]
+            return self.encoder.decode(int(prediction[0])), float(prediction[1])
+        except NotFittedError as _:
+            print('Model not fitted yet, prediction not possible.')
+            return list(self.encoder.map.keys())[0], 0.
 
 
