@@ -5,7 +5,7 @@ function Nav(props: { winState: (window: string) => void; selected: string }) {
         <div className="topnav">
             <img src={reactLogo} className="logo react" alt="Logo" />
             <a onClick={() => props.winState("browse")} target="_blank" className={props.selected === "browse" ? "active" : ""}>Browse</a>
-            <a className={props.selected === "create" ? "active" : ""}>Create</a>
+            <a onClick={() => props.winState("create")} target="_blank" className={props.selected === "create" ? "active" : ""}>Create</a>
             <a className={props.selected === "evaluate" ? "active" : ""}>Evaluate</a>
         </div>
     );
