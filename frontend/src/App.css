@@ -85,6 +85,7 @@
 
 .node {
   height: 50px;
+  min-width: 50px;
   border: 2px solid gray;
   border-radius: 200px;
   background-color: #333;
